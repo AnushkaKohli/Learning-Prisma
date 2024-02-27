@@ -1,0 +1,44 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+// The `generator` block is only needed if you want to generate Prisma Client whenever you make changes to your database code like adding a model. So everytime you make changes to the code (migrate), it updates the client for you. Client is nothing but all of the code to interact with the database. So client added a bunch of code automatically for us that allows us to interact with the users, create, read, update, delete.
+generator client {
+  provider = " prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  // name type modifier attribute
+  // name String? - ? means name is optional. so ? is a modifier
+  // posts Post[] - [] means it is an array. so [] is a modifier
+  id             String  @id @default(uuid())
+  name           String
+  email          String  @unique
+  isAdmin        Boolean @default(false)
+  // Json - used when you want to store a bunch of data in a single field. It is supported by Postgres but not by MySQL or SQLite
+  preferences    Json
+  // blob           Bytes
+  // largeNumber BigInt
+  // Multiple one to many relationships
+  writtenPosts   Post[]  @relation("writtenPosts")
+  favouritePosts Post[]  @relation("favouritePosts")
+}
+
+model Post {
+  id             String   @id @default(uuid())
+  // rating Decimal - used when you want to be very accurate with your floating point numbers
+  rating         Float
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  auhtor         User?    @relation("writtenPosts", fields: [authorId], references: [id]) // relation is used to create a foreign key
+  authorId       String
+  favouritedBy   User?    @relation("favouritePosts", fields: [favouritedById], references: [id])
+  favouritedById String
+}
