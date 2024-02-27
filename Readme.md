@@ -2,7 +2,7 @@
 
 ## Initialisation
 
-1. Next, initialize a TypeScript project and add the Prisma CLI as a development dependency to it:
+1. Initialize a TypeScript project and add the Prisma CLI as a development dependency to it:
 
     ```sh
     npm init -y

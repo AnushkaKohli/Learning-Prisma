@@ -18,27 +18,59 @@ model User {
   // name type modifier attribute
   // name String? - ? means name is optional. so ? is a modifier
   // posts Post[] - [] means it is an array. so [] is a modifier
-  id             String  @id @default(uuid())
-  name           String
-  email          String  @unique
-  isAdmin        Boolean @default(false)
+  id      String  @id @default(uuid()) //FIELD LEVEL ATTRIBUTE
+  age     Int
+  name    String
+  email   String  @unique
+  isAdmin Boolean @default(false)
   // Json - used when you want to store a bunch of data in a single field. It is supported by Postgres but not by MySQL or SQLite
-  preferences    Json
+  // preferences Json
   // blob           Bytes
   // largeNumber BigInt
-  // Multiple one to many relationships
-  writtenPosts   Post[]  @relation("writtenPosts")
-  favouritePosts Post[]  @relation("favouritePosts")
+
+  // Multiple one to many relationships - One user can have many posts
+  writtenPosts   Post[] @relation("writtenPosts")
+  favouritePosts Post[] @relation("favouritePosts")
+
+  // One to one relationship - One user can have one preference
+  userPreference UserPreference?
+
+  // BLOCK LEVEL ATTRIBUTE
+  @@unique([age, name]) //The @@unique attribute is used to make sure that the combination of age and name is unique
+  @@index([email])
+}
+
+model UserPreference {
+  id           String  @id @default(uuid())
+  emailUpdates Boolean
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique // unique is used to make sure that only one user can have one preference meaning there can't be two preferences for the same user
 }
 
 model Post {
-  id             String   @id @default(uuid())
+  id            String   @id @default(uuid())
+  title         String
   // rating Decimal - used when you want to be very accurate with your floating point numbers
-  rating         Float
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  auhtor         User?    @relation("writtenPosts", fields: [authorId], references: [id]) // relation is used to create a foreign key
+  averageRating Float
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt // updatedAt automatically updates the time when the post is updated to the current time and date
+
+  auhtor         User?  @relation("writtenPosts", fields: [authorId], references: [id]) // relation is used to create a foreign key
   authorId       String
-  favouritedBy   User?    @relation("favouritePosts", fields: [favouritedById], references: [id])
+  favouritedBy   User?  @relation("favouritePosts", fields: [favouritedById], references: [id])
   favouritedById String
+
+  // Many to many relationship - Many posts can have many categories
+  // Join table is created automatically by Prisma
+  Categories Category[]
+
+  // Create a unique constraint on the title and authorId fields making the combination as the ID
+  // @@id([title, authorId])
+}
+
+model Category {
+  id    String @id @default(uuid())
+  name  String @unique
+  posts Post[]
 }
