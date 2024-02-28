@@ -1,6 +1,6 @@
 # Learning Prisma
 
-## Initialisation
+## Initialization
 
 1. Initialize a TypeScript project and add the Prisma CLI as a development dependency to it:
 
@@ -47,6 +47,10 @@
     To map your data model to the database schema:
     `npx prisma migrate dev --name init`
 
+    Prisma Migrate generates migrations based on changes in the Prisma schema – a human-readable declarative definition of your database schema.
+
+    So every time you make changes to the schema, you've to run the migrate command
+
 6. Install prisma client using
 
     `npm install @prisma/client`
@@ -57,13 +61,19 @@
 
     Whenever you update your Prisma schema, you will have to update your database schema using either `prisma migrate dev` or `prisma db push`. This will keep your database schema in sync with your Prisma schema. The commands will also regenerate Prisma Client.
 
-    This can also be done by manually regenerating the client each time using `npx prisma generate`. It goes through all the steps of generating based on whatever provider we want (prisma-client-js - deafult).
+    Regenerating the client each time using `npx prisma generate`. It goes through all the steps of generating based on whatever provider we want (prisma-client-js - deafult). The prisma generate command reads your Prisma schema and updates the generated Prisma Client library inside node_modules/@prisma/client.
 
 7. Create your `script.ts` file and add the following to access prisma client in node.js
 
     ```ts
     import { PrismaClient } from '@prisma/client'
     const prisma = new PrismaClient()
+    ```
+
+    To log all queries that Prisma Client sends to the database, you can pass a log array
+
+    ```ts
+    const prisma = new PrismaClient({ log: ["query"] });
     ```
 
 8. To run scripts automatically using nodemon, add the following scripts to your `package.json`:
@@ -77,3 +87,114 @@
     Then run using `npm run dev`
 
 >Note: To fetch all tables in postgres `select * from information_schema.tables`
+
+## Using postgres in Prisma
+
+1. To create a new entry (user)
+
+    ```ts
+    const user = await prisma.user.create({
+      data: {
+        name: "Alice",
+      },
+    });
+    console.log("User is: ", user);
+    ```
+
+2. To print all the entries (users)
+
+    ```ts
+    const allUsers = await prisma.user.findMany({});
+    console.dir(allUsers, { depth: null });
+    ```
+
+3. To delete all entries (users)
+
+    ```ts
+    await prisma.user.deleteMany();
+    ```
+
+4. To create nested entries
+
+    ```ts
+    const user = await prisma.user.create({
+        data: {
+            name: "Anushka",
+            email: "anushka@test.com",
+            age: 22,
+            userPreference: {
+                create: {
+                emailUpdates: true,
+                },
+            },
+        },
+    })
+    ```
+
+5. Include - By using include, we can specify which nested objects to include in the response i.e we can include the various references like userPreference, posts etc.
+
+    ```ts
+    const user = await prisma.user.create({
+        data: {
+            name: "Anushka",
+            email: "anushka@test.com",
+            age: 22,
+            userPreference: {
+            create: {
+                emailUpdates: true,
+            },
+            },
+        },
+        include: {
+            userPreference: true,
+        },
+    });
+    ```
+
+6. Select - By using select, we can specify which fields to include in the response.
+
+    ```ts
+    const user = await prisma.user.create({
+        data: {
+            name: "Anushka",
+            email: "anushka@test.com",
+            age: 22,
+            userPreference: {
+            create: {
+                emailUpdates: true,
+            },
+            },
+        },
+        select: {
+            name: true,
+            userPreference: {
+                select: {
+                id: true,
+                },
+            },
+        },
+    });
+    ```
+
+    Note :- Select and include are mutually exclusive i.e we can't use both of them together
+
+7. To create many entries
+
+    ```ts
+    const user = await prisma.user.createMany({
+        data: [
+            {
+            name: "Anushka",
+            email: "anushka@test.com",
+            age: 22,
+            },
+            {
+            name: "Ananya",
+            email: "ananya@test.com",
+            age: 17,
+            },
+        ],
+    });
+    ```
+
+    > Note:- You cannot use select clause in createMany.

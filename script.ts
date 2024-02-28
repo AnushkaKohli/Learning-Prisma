@@ -1,22 +1,28 @@
 // Allows us to access prisma client
-
 // Import the PrismaClient constructor from the @prisma/client node module
 import { PrismaClient } from "@prisma/client";
 // Instantiate PrismaClient
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({});
 
 // Define an async function called main to send queries to the database
 async function main() {
   // ... you will write your Prisma Client queries here
-  const user = await prisma.user.create({
-    data: {
-      name: "Alice",
-    },
+  await prisma.user.deleteMany();
+  const user = await prisma.user.createMany({
+    data: [
+      {
+        name: "Anushka",
+        email: "anushka@test.com",
+        age: 22,
+      },
+      {
+        name: "Ananya",
+        email: "ananya@test.com",
+        age: 17,
+      },
+    ],
   });
-  console.log("User is: ", user);
-
-  const allUsers = await prisma.user.findMany({});
-  console.dir(allUsers, { depth: null });
+  console.log(user);
 }
 
 // Call the main function

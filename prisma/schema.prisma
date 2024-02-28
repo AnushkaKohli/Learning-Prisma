@@ -6,7 +6,7 @@
 
 // The `generator` block is only needed if you want to generate Prisma Client whenever you make changes to your database code like adding a model. So everytime you make changes to the code (migrate), it updates the client for you. Client is nothing but all of the code to interact with the database. So client added a bunch of code automatically for us that allows us to interact with the users, create, read, update, delete.
 generator client {
-  provider = " prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -18,11 +18,12 @@ model User {
   // name type modifier attribute
   // name String? - ? means name is optional. so ? is a modifier
   // posts Post[] - [] means it is an array. so [] is a modifier
-  id      String  @id @default(uuid()) //FIELD LEVEL ATTRIBUTE
-  age     Int
-  name    String
-  email   String  @unique
-  isAdmin Boolean @default(false)
+  id    String @id @default(uuid()) //FIELD LEVEL ATTRIBUTE
+  age   Int
+  name  String
+  email String @unique
+  role  Role   @default(BASIC)
+  // isAdmin Boolean @default(false)
   // Json - used when you want to store a bunch of data in a single field. It is supported by Postgres but not by MySQL or SQLite
   // preferences Json
   // blob           Bytes
@@ -33,7 +34,8 @@ model User {
   favouritePosts Post[] @relation("favouritePosts")
 
   // One to one relationship - One user can have one preference
-  userPreference UserPreference?
+  userPreference   UserPreference? @relation(fields: [userPreferenceId], references: [id])
+  userPreferenceId String?         @unique // unique is used to make sure that only one user can have one preference meaning there can't be two users with the same preference
 
   // BLOCK LEVEL ATTRIBUTE
   @@unique([age, name]) //The @@unique attribute is used to make sure that the combination of age and name is unique
@@ -43,9 +45,7 @@ model User {
 model UserPreference {
   id           String  @id @default(uuid())
   emailUpdates Boolean
-
-  user   User   @relation(fields: [userId], references: [id])
-  userId String @unique // unique is used to make sure that only one user can have one preference meaning there can't be two preferences for the same user
+  user         User?
 }
 
 model Post {
@@ -73,4 +73,9 @@ model Category {
   id    String @id @default(uuid())
   name  String @unique
   posts Post[]
+}
+
+enum Role {
+  BASIC
+  ADMIN
 }
