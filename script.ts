@@ -7,22 +7,32 @@ const prisma = new PrismaClient({});
 // Define an async function called main to send queries to the database
 async function main() {
   // ... you will write your Prisma Client queries here
-  await prisma.user.deleteMany();
-  const user = await prisma.user.createMany({
-    data: [
-      {
-        name: "Anushka",
-        email: "anushka@test.com",
-        age: 22,
+  // await prisma.user.deleteMany();
+  // const user = await prisma.user.createMany({
+  //   data: [
+  //     {
+  //       name: "Anushka",
+  //       email: "anushka1@test.com",
+  //       age: 17,
+  //     },
+  //     {
+  //       name: "Ananya",
+  //       email: "ananya@test.com",
+  //       age: 17,
+  //     },
+  //   ],
+  // });
+
+  const user1 = await prisma.user.findMany({
+    where: {
+      writtenPosts: {
+        every: {
+          title: "Test",
+        },
       },
-      {
-        name: "Ananya",
-        email: "ananya@test.com",
-        age: 17,
-      },
-    ],
+    },
   });
-  console.log(user);
+  console.log(user1);
 }
 
 // Call the main function

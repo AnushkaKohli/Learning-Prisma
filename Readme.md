@@ -198,3 +198,174 @@
     ```
 
     > Note:- You cannot use select clause in createMany.
+
+8. To fetch all users with a particular name by taking one at a time and skipping the first one
+
+    ```ts
+    const user = await prisma.user.findMany({
+        where: {
+            name: "Anushka",
+        },
+        take: 1,
+        skip: 1,
+    });
+
+9. To fetch all users with a name "Anushka" but distinct name and age pair and order them in ascending order
+
+    ```ts
+    const user = await prisma.user.findMany({
+        where: {
+            name: "Anushka",
+        },
+        distinct: ["name", "age"],
+        orderBy: {
+            age: "asc",
+        },
+    });
+
+10. To fetch all users with a name other than "Anushka"
+
+    ```ts
+    const user = await prisma.user.findMany({
+        where: {
+            name: { not: "Anushka" },
+        },
+    });
+    ```
+
+11. To fetch all users with a name given in the array
+
+    ```ts
+    const user = await prisma.user.findMany({
+        where: {
+            name: { in: ["Anushka", "Ananya"] },
+        },
+    });
+
+12. To fetch all users with a name other than that given in the array and age is less than 20
+
+    ```ts
+    const user = await prisma.user.findMany({
+        where: {
+            name: { notIn: ["Anushka", "Ananya"] },
+            age: { lt: 20 },
+        },
+    });
+    ```
+
+    >Note:
+    >
+    >lt -> Less than
+    >
+    >gt -> Greater than
+    >
+    >lte -> Less than equal to
+    >
+    >gte -> Greater than equal to
+
+13. To fetch all users with email containing "@test.com"
+
+    ```ts
+    const user = await prisma.user.findMany({
+        where: {
+            email: { contains: "@test.com" }
+        },
+    });
+    ```
+
+14. To fetch all users with email ending with "@test.com"
+
+    ```ts
+    const user = await prisma.user.findMany({
+        where: {
+            email: { endsWith: "@test.com" }
+        },
+    });
+
+15. To fetch all users with email starting with "anushka"
+
+    ```ts
+    const user = await prisma.user.findMany({
+        where: {
+            email: { startsWith: "anushka" }
+        },
+    });
+
+16. To combine two queries with AND
+
+    ```ts
+    const user = await prisma.user.findMany({
+        where: {
+            AND: [{ email: { startsWith: "anushka" } }, { email: { endsWith: "@test.com" } }],
+        },
+    });
+    ```
+
+17. To combine two queries with OR
+
+    ```ts
+    const user = await prisma.user.findMany({
+        where: {
+            OR: [{ email: { startsWith: "anushka" } }, { age: { gt: 20 } }],
+        },
+    });
+    ```
+
+18. To combine two queries with NOT
+
+    ```ts
+    const user = await prisma.user.findMany({
+        where: {
+            NOT: [{ email: { startsWith: "ananya" } }],
+        },
+    });
+    ```
+
+19. To find the first user with the name "Ananya"
+
+    ```ts
+    const user = await prisma.user.findFirst({
+        where: {
+            name: "Ananya",
+        },
+    });
+    ```
+
+20. To find a single record from te database with a unique attribute (email) or a combination of attributes (name_age). Note, the attribute must be defined unique in the schema.
+
+    ```ts
+    const user = await prisma.user.findUnique({
+        where: {
+            age_name: {
+                age: 22,
+                name: "Anushka",
+            },
+        },
+    });
+    ```
+
+21. To query on relationships (one to one)
+
+    ```ts
+    const user = await prisma.user.findMany({
+        where: {
+            userPreference: {
+                emailUpdates: true,
+            },
+        },
+    });
+    ```
+
+22. To check if every writtenPost has this query, or some writtenPost has this query or none writtenPost has this query (one to many)
+
+    ```ts
+    const user = await prisma.user.findMany({
+        where: {
+            writtenPosts: {
+                every: {
+                    title: "Test",
+                },
+            },
+        },
+    });
+    ```
