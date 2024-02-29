@@ -23,16 +23,16 @@ async function main() {
   //   ],
   // });
 
-  const user1 = await prisma.user.findMany({
+  const post = await prisma.post.findMany({
     where: {
-      writtenPosts: {
-        every: {
-          title: "Test",
+      auhtor: {
+        is: {
+          age: 22,
         },
       },
     },
   });
-  console.log(user1);
+  console.log(post);
 }
 
 // Call the main function

@@ -369,3 +369,17 @@
         },
     });
     ```
+
+23. To find a post whose author has age 22
+
+    ```ts
+    const post = await prisma.post.findMany({
+        where: {
+            auhtor: {
+                is: {
+                    age: 22,
+                },
+            },
+        },
+    });
+    ```
