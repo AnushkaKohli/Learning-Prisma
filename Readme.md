@@ -383,3 +383,55 @@
         },
     });
     ```
+
+24. To update a single record
+
+    ```ts
+    const user = await prisma.user.update({
+        where: {
+            email: "anushka@test.com",
+        },
+        data: {
+            age: 18,
+        },
+    });
+    ```
+
+    >Note:
+    >
+    >1. 'data' is the data that you want to update and 'where' is which record(s) you want to update.
+    >2. You can also use select or include in these queries.
+    >3. When you are doing a single update, you must be doing it on a single field
+
+25. To update all the records that matches a particular query
+
+    ```ts
+    const user = await prisma.user.update({
+        where: {
+            name: "Anushka",
+        },
+        data: {
+            name: "Anna",
+        },
+    });
+    ```
+
+    > Note: updateMany does not allow you to do select or include.
+
+26. You can increment / decrement the age
+
+    ```ts
+    const user = await prisma.user.update({
+        where: {
+            email: "anushka@test.com",
+        },
+        data: {
+            age: {
+                // increment: 1,
+                // decrement: 1,
+                // multiply: 10,
+                divide: 10,
+            },
+        },
+    });
+    ```
