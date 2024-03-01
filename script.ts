@@ -23,14 +23,9 @@ async function main() {
   //   ],
   // });
 
-  const user1 = await prisma.user.update({
+  const user1 = await prisma.user.deleteMany({
     where: {
-      email: "anushka@test.com",
-    },
-    data: {
-      age: {
-        divide: 10,
-      },
+      age: { gt: 20 },
     },
   });
   console.log(user1);

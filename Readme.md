@@ -108,13 +108,7 @@
     console.dir(allUsers, { depth: null });
     ```
 
-3. To delete all entries (users)
-
-    ```ts
-    await prisma.user.deleteMany();
-    ```
-
-4. To create nested entries
+3. To create nested entries
 
     ```ts
     const user = await prisma.user.create({
@@ -131,7 +125,7 @@
     })
     ```
 
-5. Include - By using include, we can specify which nested objects to include in the response i.e we can include the various references like userPreference, posts etc.
+4. Include - By using include, we can specify which nested objects to include in the response i.e we can include the various references like userPreference, posts etc.
 
     ```ts
     const user = await prisma.user.create({
@@ -151,7 +145,7 @@
     });
     ```
 
-6. Select - By using select, we can specify which fields to include in the response.
+5. Select - By using select, we can specify which fields to include in the response.
 
     ```ts
     const user = await prisma.user.create({
@@ -178,7 +172,7 @@
 
     Note :- Select and include are mutually exclusive i.e we can't use both of them together
 
-7. To create many entries
+6. To create many entries
 
     ```ts
     const user = await prisma.user.createMany({
@@ -199,7 +193,7 @@
 
     > Note:- You cannot use select clause in createMany.
 
-8. To fetch all users with a particular name by taking one at a time and skipping the first one
+7. To fetch all users with a particular name by taking one at a time and skipping the first one
 
     ```ts
     const user = await prisma.user.findMany({
@@ -210,7 +204,7 @@
         skip: 1,
     });
 
-9. To fetch all users with a name "Anushka" but distinct name and age pair and order them in ascending order
+8. To fetch all users with a name "Anushka" but distinct name and age pair and order them in ascending order
 
     ```ts
     const user = await prisma.user.findMany({
@@ -223,7 +217,7 @@
         },
     });
 
-10. To fetch all users with a name other than "Anushka"
+9. To fetch all users with a name other than "Anushka"
 
     ```ts
     const user = await prisma.user.findMany({
@@ -233,7 +227,7 @@
     });
     ```
 
-11. To fetch all users with a name given in the array
+10. To fetch all users with a name given in the array
 
     ```ts
     const user = await prisma.user.findMany({
@@ -242,7 +236,7 @@
         },
     });
 
-12. To fetch all users with a name other than that given in the array and age is less than 20
+11. To fetch all users with a name other than that given in the array and age is less than 20
 
     ```ts
     const user = await prisma.user.findMany({
@@ -263,7 +257,7 @@
     >
     >gte -> Greater than equal to
 
-13. To fetch all users with email containing "@test.com"
+12. To fetch all users with email containing "@test.com"
 
     ```ts
     const user = await prisma.user.findMany({
@@ -273,7 +267,7 @@
     });
     ```
 
-14. To fetch all users with email ending with "@test.com"
+13. To fetch all users with email ending with "@test.com"
 
     ```ts
     const user = await prisma.user.findMany({
@@ -282,7 +276,7 @@
         },
     });
 
-15. To fetch all users with email starting with "anushka"
+14. To fetch all users with email starting with "anushka"
 
     ```ts
     const user = await prisma.user.findMany({
@@ -291,7 +285,7 @@
         },
     });
 
-16. To combine two queries with AND
+15. To combine two queries with AND
 
     ```ts
     const user = await prisma.user.findMany({
@@ -301,7 +295,7 @@
     });
     ```
 
-17. To combine two queries with OR
+16. To combine two queries with OR
 
     ```ts
     const user = await prisma.user.findMany({
@@ -311,7 +305,7 @@
     });
     ```
 
-18. To combine two queries with NOT
+17. To combine two queries with NOT
 
     ```ts
     const user = await prisma.user.findMany({
@@ -321,7 +315,7 @@
     });
     ```
 
-19. To find the first user with the name "Ananya"
+18. To find the first user with the name "Ananya"
 
     ```ts
     const user = await prisma.user.findFirst({
@@ -331,7 +325,7 @@
     });
     ```
 
-20. To find a single record from te database with a unique attribute (email) or a combination of attributes (name_age). Note, the attribute must be defined unique in the schema.
+19. To find a single record from te database with a unique attribute (email) or a combination of attributes (name_age). Note, the attribute must be defined unique in the schema.
 
     ```ts
     const user = await prisma.user.findUnique({
@@ -344,7 +338,7 @@
     });
     ```
 
-21. To query on relationships (one to one)
+20. To query on relationships (one to one)
 
     ```ts
     const user = await prisma.user.findMany({
@@ -356,7 +350,7 @@
     });
     ```
 
-22. To check if every writtenPost has this query, or some writtenPost has this query or none writtenPost has this query (one to many)
+21. To check if every writtenPost has this query, or some writtenPost has this query or none writtenPost has this query (one to many)
 
     ```ts
     const user = await prisma.user.findMany({
@@ -370,7 +364,7 @@
     });
     ```
 
-23. To find a post whose author has age 22
+22. To find a post whose author has age 22
 
     ```ts
     const post = await prisma.post.findMany({
@@ -384,7 +378,7 @@
     });
     ```
 
-24. To update a single record
+23. To update a single record
 
     ```ts
     const user = await prisma.user.update({
@@ -403,7 +397,7 @@
     >2. You can also use select or include in these queries.
     >3. When you are doing a single update, you must be doing it on a single field
 
-25. To update all the records that matches a particular query
+24. To update all the records that matches a particular query
 
     ```ts
     const user = await prisma.user.update({
@@ -418,7 +412,7 @@
 
     > Note: updateMany does not allow you to do select or include.
 
-26. You can increment / decrement the age
+25. You can increment / decrement the age
 
     ```ts
     const user = await prisma.user.update({
@@ -434,4 +428,106 @@
             },
         },
     });
+    ```
+
+26. To update the user by creating a userPreference
+
+    ```ts
+    const user = await prisma.user.update({
+        where: {
+            email: "anushka@test.com",
+        },
+        data: {
+            userPreference: {
+                create: {
+                    emailUpdates: true,
+                },
+        },
+        },
+    });
+    ```
+
+27. Creating a new userPreference and then updating the user with the newly created userPreference by using connect. Connect is used to connect already existing objects.
+
+    ```tsx
+    const preference = await prisma.userPreference.create({
+        data: {
+            emailUpdates: true,
+        },
+    });
+    // Copy the id of newly created preference
+    console.log(preference);
+
+    const user = await prisma.user.update({
+        where: {
+            email: "anushka@test.com",
+        },
+        data: {
+            userPreference: {
+                connect: {
+                    // the copied id
+                    id: "e8661a74-5356-476a-833f-7ac7b6978090",
+                },
+            },
+        },
+    });
+    console.log(user)
+
+    // To check if the user has been updated with the new userPreference id
+    const user1 = await prisma.user.findFirst({
+        where: {
+            age: 18,
+        },
+        include: {
+            userPreference: true,
+        },
+    });
+    console.log(user1);
+    ```
+
+28. We can also disconnect to remove existing objects.
+
+    ```tsx
+    const user = await prisma.user.update({
+        where: {
+            email: "anushka@test.com",
+        },
+        data: {
+            userPreference: {
+                disconnect: true,
+            },
+        },
+    });
+    console.log(user);
+    ```
+
+29. We can also connect or disconnect using create.
+
+30. To delete a single user
+
+    ```tsx
+    const user = await prisma.user.delete({
+        where: {
+            email: "anushka@test.com",
+        },
+    });
+    console.log(user);
+    ```
+
+    > Note: delete only deletes a single user so it must be on a unique field
+
+31. To delete many users with the given query
+
+    ```tsx
+    const user = await prisma.user.deleteMany({
+        where: {
+            age: { gt: 20 },
+        },
+    });
+    ```
+
+32. To delete all entries (users)
+
+    ```ts
+    await prisma.user.deleteMany();
     ```
